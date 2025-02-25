@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Starship;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\StarshipRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,16 +12,13 @@ class MainController extends AbstractController
 {
     #[Route('/')]
     public function homepage(
-        EntityManagerInterface $em,
+        StarshipRepository $repository,
     ): Response
     {
 
-        $ships = $em->createQueryBuilder()
-            ->select('s')
-            ->from(Starship::class, 's')
-            ->getQuery()
-            ->getResult();
-        $myShip = $ships[array_rand($ships)];
+        $ships = $repository->findIncomplete();
+
+        $myShip = $repository->findMyShip();
 
         return $this->render('main/homepage.html.twig', [
             'myShip' => $myShip,

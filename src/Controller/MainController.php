@@ -15,24 +15,15 @@ class MainController extends AbstractController
     #[Route('/')]
     public function homepage(
         StarshipRepository $starshipRepository,
-        HttpClientInterface $client,
-        CacheInterface $issLocationPool,
     ): Response
     {
 
         $ships = $starshipRepository->findAll();
         $myShip = $ships[array_rand($ships)];
 
-        $issData = $issLocationPool->get('iss_location_data', function () use ($client): array {
-
-            $response = $client->request('GET', 'https://api.wheretheiss.at/v1/satellites/25544');
-            return $response->toArray();
-        });
-
         return $this->render('main/homepage.html.twig', [
             'myShip' => $myShip,
             'ships' => $ships,
-            'issData' => $issData,
         ]);
     }
 }

@@ -5,8 +5,11 @@ namespace App\Repository;
 use App\Model\Starship;
 use App\Model\StarshipStatusEnum;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
-class StarshipRepository
+class StarshipRepository extends AbstractController
 {
     public function __construct(private LoggerInterface $logger)
     {
@@ -22,21 +25,24 @@ class StarshipRepository
                 'USS LeafyCruiser (NCC-0001)',
                 'Garden',
                 'Jean-Luc Pickles',
-                StarshipStatusEnum::IN_PROGRESS
+                StarshipStatusEnum::IN_PROGRESS,
+                new \DateTimeImmutable('-1 day'),
             ),
             new Starship(
                 2,
                 'USS Espresso (NCC-1234-C)',
                 'Latte',
                 'James T. Quick!',
-                StarshipStatusEnum::WAITING,
+                StarshipStatusEnum::COMPLETED,
+                new \DateTimeImmutable('-1 week'),
             ),
             new Starship(
                 3,
                 'USS Wanderlust (NCC-2024-W)',
                 'Delta Tourist',
                 'Kathryn Journeyway',
-                StarshipStatusEnum::IN_PROGRESS,
+                StarshipStatusEnum::WAITING,
+                new \DateTimeImmutable('-1 month'),
             ),
         ];
     }
@@ -48,6 +54,7 @@ class StarshipRepository
                 return $starship;
             }
         }
+
         return null;
     }
 }
